@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Domain", "UnitTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Tests.Domain", "UnitTests.Tests.Domain\UnitTests.Tests.Domain.csproj", "{62DF9564-C263-4A0B-B6DD-0D464F1FD7F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Interface", "UnitTests\UnitTests.Interface.csproj", "{1B7F50A3-4EE2-4B44-B4A5-1EBEF255007D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Console", "UnitTests\UnitTests.Console.csproj", "{1B7F50A3-4EE2-4B44-B4A5-1EBEF255007D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

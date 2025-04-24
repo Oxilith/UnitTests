@@ -1,24 +1,15 @@
 ﻿using FluentAssertions;
+using UnitTests.Domain.Services;
 
 namespace UnitTests.Tests.Domain;
 
-public class DateCalculator
+public class DateCalculatorTests
 {
     private DateCalculator _calculator;
+
     public int Counter;
-
     public int OnceCounter;
-
-    public DateTime GetNextBusinessDay(DateTime date)
-    {
-        do
-        {
-            date = date.AddDays(1);
-        } while (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday);
-
-        return date;
-    }
-
+    
     [OneTimeSetUp]
     public void OnceTestSetUp()
     {

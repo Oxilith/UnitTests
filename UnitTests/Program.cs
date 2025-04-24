@@ -1,6 +1,6 @@
 ﻿using UnitTests.Domain;
 
-namespace UnitTests.Interface;
+namespace UnitTests.Console;
 
 internal class Program
 {
@@ -8,7 +8,7 @@ internal class Program
     {
         var range = new DateRange(DateTime.MinValue, DateTime.MaxValue);
 
-        Console.WriteLine(range.Start.ToString("G"));
-        Console.WriteLine(range.End.ToString("G"));
+        System.Console.WriteLine(range.Start.ToString("G"));
+        System.Console.WriteLine(range.End.ToString("G"));
     }
 }
