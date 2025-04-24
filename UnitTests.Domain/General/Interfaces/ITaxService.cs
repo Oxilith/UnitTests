@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Domain.Interfaces;
+﻿namespace UnitTests.Domain.General.Interfaces;
 
 public interface ITaxService
 {

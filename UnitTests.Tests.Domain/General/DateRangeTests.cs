@@ -2,9 +2,10 @@
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Moq;
-using UnitTests.Domain;
+using UnitTests.Domain.General;
+using UnitTests.Domain.General.Interfaces;
 
-namespace UnitTests.Tests.Domain;
+namespace UnitTests.Tests.Domain.General;
 
 [TestFixture]
 public class DateRangeTests

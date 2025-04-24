@@ -1,16 +1,17 @@
 ﻿using FluentAssertions;
 using Moq;
-using UnitTests.Domain.Interfaces;
-using UnitTests.Domain.Services;
+using UnitTests.Domain.General.Interfaces;
+using UnitTests.Domain.General.Services;
+using UnitTests.Domain.MeetingRoomReservationUseCase.Enums;
 
-namespace UnitTests.Tests.Domain;
+namespace UnitTests.Tests.Domain.General;
 
 public class MoqInvoiceServiceTests
 {
     private Mock<IDiscountService> _discountServiceMock;
-    private Mock<ITaxService> _taxServiceMock;
-    
+
     private InvoiceService _invoiceService;
+    private Mock<ITaxService> _taxServiceMock;
 
     [SetUp]
     public void Setup()
@@ -21,12 +22,32 @@ public class MoqInvoiceServiceTests
     }
 
     [Test]
+    public void Example()
+    {
+        _discountServiceMock.Setup(x => x.Example(It.IsAny<decimal>(), It.IsAny<CustomerType>()))
+            .Returns<decimal, CustomerType>((parameter, customerType) =>
+            {
+                return (parameter == 10m ? 10m :
+                    parameter == 20m ? 30m :
+                    0m, (int)customerType);
+            });
+
+        var result = _discountServiceMock.Object.Example(10m, CustomerType.Regular);
+        var result2 = _discountServiceMock.Object.Example(20m, CustomerType.Premium);
+        var result3 = _discountServiceMock.Object.Example(440m, CustomerType.Regular);
+
+        result.Should().Be((10m, 0));
+        result2.Should().Be((30m, 1));
+        result3.Should().Be((0m, 0));
+    }
+
+    [Test]
     public void CalculateTotal_WhenCalled_VerifiesTaxServiceGetTaxIsCalled()
     {
         // Arrange
         var amount = 100m;
         var customerType = "Regular";
-        
+
         _discountServiceMock.Setup(x => x.CalculateDiscount(It.IsAny<decimal>(), It.IsAny<string>())).Returns(10m);
         _taxServiceMock.Setup(x => x.GetTax(It.IsAny<decimal>())).Returns(5m);
 
@@ -59,8 +80,8 @@ public class MoqInvoiceServiceTests
     {
         // Arrange
         decimal capturedDiscount = 0;
-        
-        _discountServiceMock.Setup(x => 
+
+        _discountServiceMock.Setup(x =>
                 x.CalculateDiscount(It.IsAny<decimal>(), It.IsAny<string>()))
             .Returns(20m)
             .Callback<decimal, string>((amount, customerType) =>
@@ -82,7 +103,7 @@ public class MoqInvoiceServiceTests
         // Arrange
         _discountServiceMock.Setup(s => s.CalculateDiscount(It.IsAny<decimal>(), It.IsAny<string>())).Returns(10);
         _taxServiceMock.Setup(s => s.GetTax(It.IsAny<decimal>())).Returns(5);
-        
+
         // Act
         var result = _invoiceService.CalculateInvoiceAmount(1, "Any");
 
@@ -96,10 +117,12 @@ public class MoqInvoiceServiceTests
     public void CalculateInvoiceAmount_ThrowsWhenTaxServiceFails()
     {
         // Arrange
-        _taxServiceMock.Setup(s => s.GetTax(It.IsAny<decimal>())).Throws(new InvalidOperationException("Tax calculation failed"));
+        _taxServiceMock.Setup(s => s.GetTax(It.IsAny<decimal>()))
+            .Throws(new InvalidOperationException("Tax calculation failed"));
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => _invoiceService.CalculateInvoiceAmount(1, "Any"), "Tax calculation failed");
+        Assert.Throws<InvalidOperationException>(() => _invoiceService.CalculateInvoiceAmount(1, "Any"),
+            "Tax calculation failed");
     }
 
     [Test]

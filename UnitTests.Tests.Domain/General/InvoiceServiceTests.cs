@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using UnitTests.Domain.Services;
+using UnitTests.Domain.General.Services;
 
-namespace UnitTests.Tests.Domain;
+namespace UnitTests.Tests.Domain.General;
 
 public class InvoiceServiceTests
 {
@@ -92,18 +92,15 @@ public class InvoiceServiceTests
     public void GenerateInvoiceItems_ShouldContain_ItemWithSpecificName()
     {
         // Arrange
-        var expectedProductNames = new[]{"Laptop", "Smartphone","Tablet"};
-        
+        var expectedProductNames = new[] { "Laptop", "Smartphone", "Tablet" };
+
         // Act
         var items = _invoiceService.GenerateInvoiceItems();
-        
+
         // Assert
         items.Select(x => x.ProductName)
             .Should()
-            .AllSatisfy(x =>
-            {
-                x.Should().BeOneOf(expectedProductNames);
-            });
+            .AllSatisfy(x => { x.Should().BeOneOf(expectedProductNames); });
     }
 
     [Test]

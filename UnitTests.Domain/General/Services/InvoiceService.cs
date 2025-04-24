@@ -1,16 +1,16 @@
-﻿using UnitTests.Domain.Interfaces;
+﻿using UnitTests.Domain.General.Interfaces;
 
-namespace UnitTests.Domain.Services;
+namespace UnitTests.Domain.General.Services;
 
 public class InvoiceService : IInvoiceService
 {
     private readonly IDiscountService _discountService;
     private readonly ITaxService _taxService;
-    
+
     public InvoiceService()
     {
     }
-    
+
     public InvoiceService(ITaxService taxService, IDiscountService discountService)
     {
         _taxService = taxService;

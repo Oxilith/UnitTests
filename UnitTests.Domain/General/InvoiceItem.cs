@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Domain;
+﻿namespace UnitTests.Domain.General;
 
 public class InvoiceItem
 {

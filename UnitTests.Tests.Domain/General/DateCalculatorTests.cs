@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using UnitTests.Domain.Services;
+using UnitTests.Domain.General.Services;
 
-namespace UnitTests.Tests.Domain;
+namespace UnitTests.Tests.Domain.General;
 
 public class DateCalculatorTests
 {
@@ -9,7 +9,7 @@ public class DateCalculatorTests
 
     public int Counter;
     public int OnceCounter;
-    
+
     [OneTimeSetUp]
     public void OnceTestSetUp()
     {

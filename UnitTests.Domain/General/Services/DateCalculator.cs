@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Domain.Services;
+﻿namespace UnitTests.Domain.General.Services;
 
 public class DateCalculator
 {

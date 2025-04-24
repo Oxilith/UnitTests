@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Domain;
+﻿using UnitTests.Domain.General.Interfaces;
+
+namespace UnitTests.Domain.General;
 
 public class DateRange : IDateRange
 {

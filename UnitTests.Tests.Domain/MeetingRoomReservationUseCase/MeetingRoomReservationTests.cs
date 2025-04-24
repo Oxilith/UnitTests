@@ -1,4 +1,9 @@
-﻿namespace UnitTests.Tests.Domain.MeetingRoomReservationUseCase;
+﻿using UnitTests.Domain.MeetingRoomReservationUseCase.Entities;
+using UnitTests.Domain.MeetingRoomReservationUseCase.Interfaces;
+using UnitTests.Domain.MeetingRoomReservationUseCase.Services;
+using UnitTests.Domain.MeetingRoomReservationUseCase.ValueObjects;
+
+namespace UnitTests.Tests.Domain.MeetingRoomReservationUseCase;
 
 public class MeetingRoomReservationTests
 {
@@ -39,7 +44,7 @@ public class MeetingRoomReservationTests
         // Assert
         Assert.That(result, Is.False);
     }
-    
+
     [Test]
     public void Reservation_Should_Fail_When_Conflicts()
     {
@@ -47,120 +52,114 @@ public class MeetingRoomReservationTests
         var room = new MeetingRoom("Gdynia");
         var reservation = new Reservation(
             new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3)));
-        
+
         var conflictingReservation = new Reservation(
             new TimeRange(DateTime.UtcNow.AddHours(2.5), DateTime.UtcNow.AddHours(3.5)));
 
         // Act && Assert
         var result = _reservationService.AddReservation(room, reservation);
-        Assert.That(result, Is.True);   
-        
+        Assert.That(result, Is.True);
+
         var conflictingResult = _reservationService.AddReservation(room, conflictingReservation);
         Assert.That(conflictingResult, Is.False);
     }
-    
-        
+
     [Test]
-    public void TimeRange_Should_Create_When_EndDate_After_StartDate()
+    public void Reservation_Should_Fail_When_Start_Occurs_When_Previous_Reservation_Ends()
     {
-        Action act = () => new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3));
-        
-        Assert.DoesNotThrow(act.Invoke, "Time range should not throw when start date is before end date.");
+        // Arrange
+        var room = new MeetingRoom("Gdynia");
+
+        var firstReservationTime = new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3));
+        var secondReservationTime = new TimeRange(firstReservationTime.End, firstReservationTime.End.AddHours(1));
+
+        var firstReservation = new Reservation(firstReservationTime);
+        var secondReservation = new Reservation(secondReservationTime);
+
+        // Act && Assert
+        var result = _reservationService.AddReservation(room, firstReservation);
+        Assert.That(result, Is.True, "First reservation should be successful.");
+
+        var conflictingResult = _reservationService.AddReservation(room, secondReservation);
+        Assert.That(conflictingResult, Is.False, "Second reservation should fail due to conflict.");
     }
-    
+
     [Test]
-    public void TimeRange_Should_Throw_When_EndDate_Before_StartDate()
+    public void Reservation_Should_Pass_When_Start_Occurs_Right_Before_Or_After_Previous_Reservation_Ends()
     {
-        Action act = () => new TimeRange(DateTime.UtcNow.AddHours(3), DateTime.UtcNow.AddHours(2));
+        // Arrange
+        var room = new MeetingRoom("Gdynia");
 
-        Assert.Throws<InvalidOperationException>(act.Invoke, "Time range should throw when end date is before start date.");
+        var firstStartTime = DateTime.UtcNow.AddHours(4);
+        var firstEndTime = firstStartTime.AddHours(1);
+
+        var firstReservationTime = new TimeRange(firstStartTime, firstEndTime);
+        var rightAfterReservationTime = new TimeRange(firstEndTime.AddMilliseconds(1), firstEndTime.AddHours(1));
+        var rightBeforeReservationTime = new TimeRange(firstStartTime.AddHours(-1), firstStartTime.AddMilliseconds(-1));
+
+        var firstReservation = new Reservation(firstReservationTime);
+        var rightAfterReservation = new Reservation(rightAfterReservationTime);
+        var rightBeforeReservation = new Reservation(rightBeforeReservationTime);
+
+        // Act && Assert
+        var result = _reservationService.AddReservation(room, firstReservation);
+        Assert.That(result, Is.True, "First reservation should be successful.");
+
+        var rightAfterReservationResult = _reservationService.AddReservation(room, rightAfterReservation);
+        Assert.That(rightAfterReservationResult, Is.True, "Right after reservation should be successful.");
+
+        var rightBeforeReservationResult = _reservationService.AddReservation(room, rightBeforeReservation);
+        Assert.That(rightBeforeReservationResult, Is.True, "Right before reservation should be successful.");
+    }
+
+    [Test]
+    public void Reservation_Should_Fail_When_Is_Shorter_Than_Room_Allows()
+    {
+        // Arrange
+        var room = new MeetingRoom("Gdynia", TimeBoxLimit.Default());
+
+        var firstStartTime = DateTime.UtcNow.AddHours(4);
+        var firstEndTime = firstStartTime.AddMinutes(30).AddMilliseconds(-1);
+        var reservation = new Reservation(
+            new TimeRange(firstStartTime, firstEndTime));
+
+        // Act
+        var result = _reservationService.AddReservation(room, reservation);
+
+        // Assert
+        Assert.That(result, Is.False, "Reservation should fail when it is shorter than the room allows.");
+    }
+
+    [Test]
+    public void Reservation_Should_Fail_When_Is_Longer_Than_Room_Allows()
+    {
+        // Arrange
+        var room = new MeetingRoom("Gdynia");
+
+        var firstStartTime = DateTime.UtcNow.AddHours(4);
+        var firstEndTime = firstStartTime.AddMinutes(90).AddMilliseconds(1);
+        var reservation = new Reservation(
+            new TimeRange(firstStartTime, firstEndTime));
+
+        // Act
+        var result = _reservationService.AddReservation(room, reservation);
+
+        // Assert
+        Assert.That(result, Is.False, "Reservation should fail when it is longer than the room allows.");
+    }
+
+    [Test]
+    public void Reservation_Should_Fail_When_Is_Made_To_Start_When_Requested()
+    {
+        // Arrange
+        var requestedStartTime = DateTime.UtcNow.AddHours(4);
+        var endTime = requestedStartTime.AddHours(1);
+
+        // Act
+        Action act = () => new Reservation(new TimeRange(requestedStartTime, endTime), requestedStartTime);
+
+        // Assert
+        Assert.Throws<InvalidOperationException>(act.Invoke,
+            "Reservation instantiation should throw creation timestamp is before or equals to start time.");
     }
 }
-
-#region MoveToDomain
-
-// Entity
-public class MeetingRoom
-{
-    private readonly List<Reservation> _reservations = new();
-
-    public MeetingRoom(string name)
-    {
-        Name = name;
-        Id = Guid.NewGuid();
-    }
-
-    public string Name { get; }
-    public Guid Id { get; }
-
-    public IReadOnlyCollection<Reservation> Reservations => _reservations;
-
-    public bool AddReservation(Reservation reservation)
-    {
-        var succeeded = false;
-        if (!reservation.IsInThePast && !_reservations.Any(x => x.Overlaps(reservation)))
-        {
-            _reservations.Add(reservation);
-            succeeded = true;
-        }
-
-        return succeeded;
-    }
-}
-
-// Entity
-public class Reservation
-{
-    public Reservation(TimeRange time)
-    {
-        Id = Guid.NewGuid();
-        Time = time;
-    }
-
-    public Guid Id { get; }
-    public TimeRange Time { get; }
-    public bool IsInThePast => Time.Start < DateTime.UtcNow;
-
-    public bool Overlaps(Reservation reservation)
-    {
-        return reservation.Id == Id || Time.Overlaps(reservation.Time);
-    }
-}
-
-// ValueObject
-public class TimeRange
-{
-    public TimeRange(DateTime start, DateTime end)
-    {
-        if (start > end)
-        {
-            throw new InvalidOperationException("End date should not occur before start date.");
-        }
-        
-        Start = start;
-        End = end;
-    }
-
-    public DateTime Start { get; }
-    public DateTime End { get; }
-
-    public bool Overlaps(TimeRange reservationTime)
-    {
-        return Start < reservationTime.End && End > reservationTime.Start;
-    }
-}
-
-public class ReservationService : IReservationService
-{
-    public bool AddReservation(MeetingRoom room, Reservation reservation)
-    {
-        return room.AddReservation(reservation);
-    }
-}
-
-public interface IReservationService
-{
-    bool AddReservation(MeetingRoom room, Reservation reservation);
-}
-
-#endregion
