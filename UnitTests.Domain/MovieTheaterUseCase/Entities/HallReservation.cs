@@ -5,8 +5,8 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
 public class HallReservation
 {
-    private const int MaxSeatCount = 5;
-    private const int MinSeatCount = 1;
+    public static readonly int MaxSeatCount = 5;
+    public static readonly int MinSeatCount = 1;
 
     public HallReservation(List<SeatPosition> seats)
     {
@@ -32,7 +32,8 @@ public class HallReservation
 
     private static void ValidateSeatPositions(Dictionary<Guid, List<int>> seatDict)
     {
-        if (seatDict.Any(rowSeats => rowSeats.Value.Count is < MinSeatCount or > MaxSeatCount))
+        if (seatDict.Any(rowSeats =>
+                rowSeats.Value.Count < MinSeatCount || rowSeats.Value.Count > MaxSeatCount))
             throw new BusinessRuleViolationException(
                 "HallReservation must be between 1 and 5 seats.");
     }

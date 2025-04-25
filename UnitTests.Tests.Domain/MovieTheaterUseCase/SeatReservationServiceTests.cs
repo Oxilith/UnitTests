@@ -22,15 +22,75 @@ public class SeatReservationServiceTests
     }
 
     [Test]
-    public void ReservationCannotBeInPast()
+    public void CannotReserveSeatsWithoutSocialDistance()
     {
-        Assert.That(true, Is.False);
+        // Arrange
+        var cinemaHall = _dataProvider.GetIMaxCinemaHall();
+
+        var reservation = _dataProvider.GetBaseReservationForSocialDistanceCheck(cinemaHall.Rows.ToList());
+        var failingReservation = _dataProvider.GetReservationForSocialDistanceCheckToFail(cinemaHall.Rows.ToList());
+
+        _movieTheaterRepositoryMock.Setup(x => x.GetCinemaHall(It.IsAny<Guid>()))
+            .ReturnsAsync(cinemaHall);
+
+        // Act
+        var act = () => _service.Reserve(cinemaHall.Id, reservation).Wait();
+        var act2 = () => _service.Reserve(cinemaHall.Id, failingReservation).Wait();
+
+        // Assert
+        act.Should().NotThrow();
+        act2.Should().Throw<BusinessRuleViolationException>()
+            .WithMessage(
+                $"Cannot reserve seats without social distance. Minimum distance required {CinemaHall.SocialDistance} seats.");
     }
 
     [Test]
-    public void ReservationCannotBeMoreThan30DaysInFuture()
+    public void ReserveSeatsWithSocialDistanceShouldPass()
     {
-        Assert.That(true, Is.False);
+        // Arrange
+        var cinemaHall = _dataProvider.GetIMaxCinemaHall();
+
+        var reservation = _dataProvider.GetBaseReservationForSocialDistanceCheck(cinemaHall.Rows.ToList());
+        var failingReservation = _dataProvider.GetReservationForSocialDistanceCheckToSucceed(cinemaHall.Rows.ToList());
+
+        _movieTheaterRepositoryMock.Setup(x => x.GetCinemaHall(It.IsAny<Guid>()))
+            .ReturnsAsync(cinemaHall);
+
+        // Act
+        var act = () => _service.Reserve(cinemaHall.Id, reservation).Wait();
+        var act2 = () => _service.Reserve(cinemaHall.Id, failingReservation).Wait();
+
+        // Assert
+        act.Should().NotThrow();
+        act2.Should().NotThrow();
+    }
+
+    [Test]
+    public void CannotReserveAlreadyReservedSeats()
+    {
+        // Arrange
+        var cinemaHall = CinemaHall.Create(new List<HallRow>
+        {
+            new(1, 2),
+            new(2, 3),
+            new(3, 4),
+            new(9, 5)
+        });
+
+        var reservation = _dataProvider.GetCorrectReservation(cinemaHall.Rows.ToList());
+        var reservation2 = _dataProvider.GetCorrectReservation(cinemaHall.Rows.ToList());
+
+        _movieTheaterRepositoryMock.Setup(x => x.GetCinemaHall(It.IsAny<Guid>()))
+            .ReturnsAsync(cinemaHall);
+
+        // Act
+        var act = () => _service.Reserve(cinemaHall.Id, reservation).Wait();
+        var act2 = () => _service.Reserve(cinemaHall.Id, reservation2).Wait();
+
+        // Assert
+        act.Should().NotThrow();
+        act2.Should().Throw<BusinessRuleViolationException>()
+            .WithMessage("Seats are already reserved.");
     }
 
     [Test]
@@ -114,14 +174,15 @@ public class SeatReservationServiceTests
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("HallReservation must be between 1 and 5 seats.");
+            .WithMessage(
+                $"HallReservation must be between {HallReservation.MinSeatCount} and {HallReservation.MaxSeatCount} seats.");
     }
 
     [Test]
     public void CannotCreateReservationIfNotEnoughSeatsInRow()
     {
         // Arrange
-        var theater = CinemaHall.Create(new List<HallRow>
+        var cinemaHall = CinemaHall.Create(new List<HallRow>
         {
             new(1, 1),
             new(2, 4),
@@ -129,13 +190,13 @@ public class SeatReservationServiceTests
             new(9, 6)
         });
 
-        var reservation = _dataProvider.GetCorrectReservation(theater.Rows.ToList());
+        var reservation = _dataProvider.GetCorrectReservation(cinemaHall.Rows.ToList());
 
         _movieTheaterRepositoryMock.Setup(x => x.GetCinemaHall(It.IsAny<Guid>()))
-            .ReturnsAsync(theater);
+            .ReturnsAsync(cinemaHall);
 
         // Act
-        var act = () => _service.Reserve(theater.Id, reservation).Wait();
+        var act = () => _service.Reserve(cinemaHall.Id, reservation).Wait();
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()

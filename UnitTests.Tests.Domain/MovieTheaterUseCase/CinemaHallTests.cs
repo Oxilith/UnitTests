@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using UnitTests.Domain.MovieTheaterUseCase.Entities;
 using UnitTests.Domain.MovieTheaterUseCase.Exceptions;
 
 namespace UnitTests.Tests.Domain.MovieTheaterUseCase;
@@ -17,13 +18,47 @@ public class CinemaHallTests
     [Test]
     public void CinemaHallFirstRowShouldHaveNumberOne()
     {
-        Assert.That(true, Is.False);
+        // Arrange
+        var cinemaHall = _dataProvider.GetCorrectCinemaHall();
+
+        // Act
+        var firstRow = cinemaHall.Rows.First();
+
+        // Assert
+        firstRow.Number.Should().Be(CinemaHall.ExpectedFirstRowNumber);
+    }
+
+    [Test]
+    public void CinemaHallShouldThrowsWhenFirstRowDoesNotHaveNumberOne()
+    {
+        // Arrange & Act
+        var act = () => _dataProvider.GetCinemaHallWithWrongFirstRowNumber();
+
+        // Assert
+        act.Should().Throw<BusinessRuleViolationException>()
+            .WithMessage($"Cinema hall first row should have number {CinemaHall.ExpectedFirstRowNumber}.");
     }
 
     [Test]
     public void CinemaHallRowsShouldHaveConsecutiveNumbers()
     {
-        Assert.That(true, Is.False);
+        // Arrange && Act
+        var act = () => _dataProvider.GetCorrectCinemaHall();
+
+        // Assert
+        act.Should().NotThrow<BusinessRuleViolationException>();
+    }
+
+    [Test]
+    public void CinemaHallShouldThrowsWhenRowsAreNotInOrder()
+    {
+        // Arrange && Act
+        var act = () => _dataProvider.GetCinemaHallWithRowsInWrongOrder();
+
+        // Assert
+
+        act.Should().Throw<BusinessRuleViolationException>()
+            .WithMessage("Cinema hall rows should be in order.");
     }
 
 
@@ -36,9 +71,9 @@ public class CinemaHallTests
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("Cinema hall should have at least 1 row.");
+            .WithMessage($"Cinema hall should have at least {CinemaHall.MinRowCount} row.");
         act2.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("Cinema hall should have at most 9 rows.");
+            .WithMessage($"Cinema hall should have at most {CinemaHall.MaxRowCount} rows.");
     }
 
     [Test]

@@ -5,6 +5,25 @@ namespace UnitTests.Tests.Domain;
 
 public class TestDataProvider
 {
+    public CinemaHall GetCinemaHallWithWrongFirstRowNumber()
+    {
+        return CinemaHall.Create(new List<HallRow>
+            {
+                new(2, 1)
+            }
+        );
+    }
+
+    public CinemaHall GetCinemaHallWithRowsInWrongOrder()
+    {
+        return CinemaHall.Create(new List<HallRow>
+        {
+            new(1, 1),
+            new(3, 2),
+            new(2, 2)
+        });
+    }
+
     #region HallReservation
 
     public HallReservation GetReservationWithNullSeatPositions()
@@ -48,6 +67,38 @@ public class TestDataProvider
             new(rows.First(x => x.Number == 9).Id, 3),
             new(rows.First(x => x.Number == 9).Id, 4),
             new(rows.First(x => x.Number == 9).Id, 5)
+        });
+    }
+
+    public HallReservation GetBaseReservationForSocialDistanceCheck(List<HallRow> rows)
+    {
+        return new HallReservation(new List<SeatPosition>
+        {
+            new(rows.First(x => x.Number == 1).Id, 1),
+            new(rows.First(x => x.Number == 2).Id, 1),
+            new(rows.First(x => x.Number == 2).Id, 2),
+            new(rows.First(x => x.Number == 3).Id, 1),
+            new(rows.First(x => x.Number == 3).Id, 2),
+            new(rows.First(x => x.Number == 3).Id, 3),
+            new(rows.First(x => x.Number == 4).Id, 1)
+        });
+    }
+
+    public HallReservation GetReservationForSocialDistanceCheckToFail(List<HallRow> rows)
+    {
+        return new HallReservation(new List<SeatPosition>
+        {
+            new(rows.First(x => x.Number == 4).Id, 2),
+            new(rows.First(x => x.Number == 4).Id, 3)
+        });
+    }
+
+    public HallReservation GetReservationForSocialDistanceCheckToSucceed(List<HallRow> rows)
+    {
+        return new HallReservation(new List<SeatPosition>
+        {
+            new(rows.First(x => x.Number == 4).Id, 3),
+            new(rows.First(x => x.Number == 4).Id, 4)
         });
     }
 
@@ -105,6 +156,22 @@ public class TestDataProvider
             new(8, 8),
             new(9, 9),
             new(10, 9)
+        });
+    }
+
+    public CinemaHall GetIMaxCinemaHall()
+    {
+        return CinemaHall.Create(new List<HallRow>
+        {
+            new(1, 1),
+            new(2, 2),
+            new(3, 3),
+            new(4, 4),
+            new(5, 5),
+            new(6, 6),
+            new(7, 7),
+            new(8, 8),
+            new(9, 9)
         });
     }
 

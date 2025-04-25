@@ -4,8 +4,11 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
 public class CinemaHall
 {
-    private const int MinRowCount = 1;
-    private const int MaxRowCount = 9;
+    public static readonly int MinRowCount = 1;
+    public static readonly int MaxRowCount = 9;
+    public static readonly int ExpectedFirstRowNumber = 1;
+    public static readonly int SocialDistance = 1;
+
     private readonly List<HallReservation> _reservations = new();
     private readonly List<HallRow> _rows;
 
@@ -28,8 +31,25 @@ public class CinemaHall
     private static void ValidateRows(IReadOnlyList<HallRow> rows)
     {
         ValidateRowCount(rows.Count);
+        ValidateFirstRowNumber(rows.First().Number);
         ValidateDuplicateRows(rows);
+        ValidateRowOrder(rows);
         ValidateSeatCountIncreasing(rows);
+    }
+
+    private static void ValidateRowOrder(IReadOnlyList<HallRow> rows)
+    {
+        for (var i = 1; i < rows.Count; i++)
+            if (rows[i].Number <= rows[i - 1].Number)
+                throw new BusinessRuleViolationException(
+                    "Cinema hall rows should be in order.");
+    }
+
+    private static void ValidateFirstRowNumber(int number)
+    {
+        if (number != ExpectedFirstRowNumber)
+            throw new BusinessRuleViolationException(
+                $"Cinema hall first row should have number {ExpectedFirstRowNumber}.");
     }
 
     private static void ValidateRowCount(int count)
@@ -85,5 +105,10 @@ public class CinemaHall
     public bool DoesReservationExistInTheHall(Guid reservationId)
     {
         return _reservations.Any(x => x.Id == reservationId);
+    }
+
+    public List<Dictionary<Guid, List<int>>> GetReservedSeatsByRow()
+    {
+        return _reservations.Select(x => x.SeatsByRows).ToList();
     }
 }
