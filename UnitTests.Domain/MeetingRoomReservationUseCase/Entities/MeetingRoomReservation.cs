@@ -1,5 +1,4 @@
 ﻿using UnitTests.Domain.MeetingRoomReservationUseCase.ValueObjects;
-using UnitTests.Domain.MovieTheaterUseCase.ValueObjects;
 
 namespace UnitTests.Domain.MeetingRoomReservationUseCase.Entities;
 

@@ -11,7 +11,7 @@ public class SeatReservationService
     {
         _repo = repo;
     }
-    
+
     public async Task Reserve(Guid theaterId, Reservation reservation)
     {
         var theater = await _repo.Get(theaterId);
@@ -23,13 +23,13 @@ public class SeatReservationService
 
         Console.WriteLine("Trying to reserve seats");
         theater.Reserve(reservation);
-        
+
         if (theater.Reservations.All(x => x.Id != reservation.Id))
         {
             Console.WriteLine("Reservation failed");
             throw new InvalidOperationException("Reservation failed");
         }
-        
+
         Console.WriteLine("Reservation succeeded");
         await _repo.Save(theater);
     }
