@@ -25,7 +25,7 @@ public class SeatReservationServiceTests
     public void CannotAddTwoRowsWithSameNumber()
     {
         // Arrange & Act
-        var act = () => CinemaHall.Create(new List<Row>
+        var act = () => CinemaHall.Create(new List<HallRow>
         {
             new(1, 3),
             new(2, 4),
@@ -55,7 +55,7 @@ public class SeatReservationServiceTests
     public void CanCreateRowsThatAreNumberedFrom1To9(int rowNumber, int seatNumber)
     {
         // Arrange & Act
-        Action act2 = () => new Row(rowNumber, seatNumber);
+        Action act2 = () => new HallRow(rowNumber, seatNumber);
 
         // Assert
         act2.Should().NotThrow<BusinessRuleViolationException>();
@@ -65,7 +65,7 @@ public class SeatReservationServiceTests
     public void CannotCreateReservationIfLessThanOneSeat()
     {
         // Arrange
-        var theater = CinemaHall.Create(new List<Row>
+        var theater = CinemaHall.Create(new List<HallRow>
         {
             new(1, 3),
             new(2, 4),
@@ -80,14 +80,14 @@ public class SeatReservationServiceTests
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("Reservation must have at least one seat.");
+            .WithMessage("HallReservation must have at least one seat.");
     }
 
     [Test]
     public void CannotCreateReservationIfMoreThanFiveSeats()
     {
         // Arrange
-        var theater = CinemaHall.Create(new List<Row>
+        var theater = CinemaHall.Create(new List<HallRow>
         {
             new(1, 3),
             new(2, 4),
@@ -102,14 +102,14 @@ public class SeatReservationServiceTests
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("Reservation must be between 1 and 5 seats.");
+            .WithMessage("HallReservation must be between 1 and 5 seats.");
     }
 
     [Test]
     public void CannotCreateReservationIfNotEnoughSeatsInRow()
     {
         // Arrange
-        var theater = CinemaHall.Create(new List<Row>
+        var theater = CinemaHall.Create(new List<HallRow>
         {
             new(1, 1),
             new(2, 4),

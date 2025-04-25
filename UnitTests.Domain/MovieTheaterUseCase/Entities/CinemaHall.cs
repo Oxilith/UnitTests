@@ -4,26 +4,26 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
 public class CinemaHall
 {
-    private readonly List<Reservation> _reservations = new();
-    private readonly List<Row> _rows;
+    private readonly List<HallReservation> _reservations = new();
+    private readonly List<HallRow> _rows;
 
-    private CinemaHall(List<Row> rows)
+    private CinemaHall(List<HallRow> rows)
     {
         _rows = rows;
         Id = Guid.NewGuid();
     }
 
     public Guid Id { get; }
-    public IReadOnlyCollection<Reservation> Reservations => _reservations;
-    public IReadOnlyCollection<Row> Rows => _rows;
+    public IReadOnlyCollection<HallReservation> Reservations => _reservations;
+    public IReadOnlyCollection<HallRow> Rows => _rows;
 
-    public static CinemaHall Create(List<Row> rows)
+    public static CinemaHall Create(List<HallRow> rows)
     {
         ValidateRows(rows);
         return new CinemaHall(rows);
     }
 
-    private static void ValidateRows(List<Row> rows)
+    private static void ValidateRows(List<HallRow> rows)
     {
         if (rows is not { Count: > 0 })
             throw new BusinessRuleViolationException("Cinema hall should have at least one row.");
@@ -46,14 +46,14 @@ public class CinemaHall
         }
     }
 
-    public void Reserve(Reservation reservation)
+    public void Reserve(HallReservation hallReservation)
     {
-        _reservations.Add(reservation);
+        _reservations.Add(hallReservation);
     }
 
-    public bool DoesReservationExistInTheHall(Reservation reservation)
+    public bool DoesReservationExistInTheHall(HallReservation hallReservation)
     {
-        return _reservations.Any(x => x.Id == reservation.Id);
+        return _reservations.Any(x => x.Id == hallReservation.Id);
     }
 
     public bool DoesRowContainEnoughSeats(Guid rowId, int seatCount)

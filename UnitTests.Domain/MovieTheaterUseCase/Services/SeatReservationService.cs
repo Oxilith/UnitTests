@@ -13,35 +13,35 @@ public class SeatReservationService
         _repo = repo;
     }
 
-    public async Task Reserve(Guid theaterId, Reservation reservation)
+    public async Task Reserve(Guid theaterId, HallReservation hallReservation)
     {
         var cinemaHall = await _repo.GetCinemaHall(theaterId);
         ArgumentNullException.ThrowIfNull(cinemaHall, nameof(cinemaHall));
 
-        CheckIfReservationIsPossible(reservation, cinemaHall);
-        cinemaHall.Reserve(reservation);
+        CheckIfReservationIsPossible(hallReservation, cinemaHall);
+        cinemaHall.Reserve(hallReservation);
 
-        CheckIfReservationWasSaved(reservation, cinemaHall);
+        CheckIfReservationWasSaved(hallReservation, cinemaHall);
         await _repo.Save(cinemaHall);
     }
 
-    private static void CheckIfReservationWasSaved(Reservation reservation, CinemaHall theater)
+    private static void CheckIfReservationWasSaved(HallReservation hallReservation, CinemaHall theater)
     {
-        if (!theater.DoesReservationExistInTheHall(reservation.Id)) return;
+        if (!theater.DoesReservationExistInTheHall(hallReservation.Id)) return;
 
-        Console.WriteLine("Reservation failed");
-        throw new InvalidOperationException("Reservation failed");
+        Console.WriteLine("HallReservation failed");
+        throw new InvalidOperationException("HallReservation failed");
     }
 
-    private static void CheckIfReservationIsPossible(Reservation reservation, CinemaHall theater)
+    private static void CheckIfReservationIsPossible(HallReservation hallReservation, CinemaHall theater)
     {
-        if (theater.DoesReservationExistInTheHall(reservation))
-            throw new BusinessRuleViolationException("Reservation was already added.");
+        if (theater.DoesReservationExistInTheHall(hallReservation))
+            throw new BusinessRuleViolationException("HallReservation was already added.");
 
-        foreach (var rowSeats in reservation.SeatsByRows)
+        foreach (var rowSeats in hallReservation.SeatsByRows)
         {
             if (!theater.DoesRowExistInTheHall(rowSeats.Key))
-                throw new BusinessRuleViolationException($"Row {rowSeats.Key} does not exist in the theater.");
+                throw new BusinessRuleViolationException($"HallRow {rowSeats.Key} does not exist in the theater.");
 
             if (!theater.DoesRowContainEnoughSeats(rowSeats.Key, rowSeats.Value.Count))
                 throw new BusinessRuleViolationException($"Not enough seats available in the row {rowSeats.Key}.");

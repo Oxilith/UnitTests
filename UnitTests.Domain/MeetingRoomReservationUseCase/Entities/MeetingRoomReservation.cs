@@ -8,7 +8,7 @@ public class MeetingRoomReservation
     {
         CreationTimestamp = creationTimestamp ?? DateTime.UtcNow;
         if (time.Start <= creationTimestamp)
-            throw new InvalidOperationException("Reservation start time cannot be set to time when requested.");
+            throw new InvalidOperationException("HallReservation start time cannot be set to time when requested.");
 
         Id = Guid.NewGuid();
         Time = time;

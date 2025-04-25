@@ -1,8 +1,8 @@
 ﻿namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
-public class Row
+public class HallRow
 {
-    public Row(int number, int seats)
+    public HallRow(int number, int seats)
     {
         Number = number;
         Seats = seats;

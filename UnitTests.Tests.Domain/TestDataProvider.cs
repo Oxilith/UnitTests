@@ -5,26 +5,26 @@ namespace UnitTests.Tests.Domain;
 
 public class TestDataProvider
 {
-    #region Reservation
+    #region HallReservation
 
-    public Reservation GetReservationWithNullSeatPositions()
+    public HallReservation GetReservationWithNullSeatPositions()
     {
-        return new Reservation(null);
+        return new HallReservation(null);
     }
 
-    public Reservation? GetNullReservation()
+    public HallReservation? GetNullReservation()
     {
         return null;
     }
 
-    public Reservation GetEmptyReservation()
+    public HallReservation GetEmptyReservation()
     {
-        return new Reservation(new List<SeatPosition>());
+        return new HallReservation(new List<SeatPosition>());
     }
 
-    public Reservation GetCorrectReservation(List<Row>? rows = null)
+    public HallReservation GetCorrectReservation(List<HallRow>? rows = null)
     {
-        rows ??= new List<Row>
+        rows ??= new List<HallRow>
         {
             new(1, 2),
             new(2, 3),
@@ -32,7 +32,7 @@ public class TestDataProvider
             new(9, 5)
         };
 
-        return new Reservation(new List<SeatPosition>
+        return new HallReservation(new List<SeatPosition>
         {
             new(rows.First(x => x.Number == 1).Id, 1),
             new(rows.First(x => x.Number == 1).Id, 2),
@@ -51,14 +51,14 @@ public class TestDataProvider
         });
     }
 
-    public Reservation GetLengthyReservation()
+    public HallReservation GetLengthyReservation()
     {
-        var rows = new List<Row>
+        var rows = new List<HallRow>
         {
             new(1, 6),
             new(2, 3)
         };
-        return new Reservation(new List<SeatPosition>
+        return new HallReservation(new List<SeatPosition>
         {
             new(rows.First(x => x.Number == 2).Id, 1),
             new(rows.First(x => x.Number == 2).Id, 2),
@@ -78,7 +78,7 @@ public class TestDataProvider
 
     public CinemaHall GetCorrectCinemaHall()
     {
-        return CinemaHall.Create(new List<Row>
+        return CinemaHall.Create(new List<HallRow>
         {
             new(1, 3),
             new(2, 4),
@@ -88,12 +88,12 @@ public class TestDataProvider
 
     public CinemaHall GetEmptyCinemaHall()
     {
-        return CinemaHall.Create(new List<Row>());
+        return CinemaHall.Create(new List<HallRow>());
     }
 
     public CinemaHall GetLengthyCinemaHall()
     {
-        return CinemaHall.Create(new List<Row>
+        return CinemaHall.Create(new List<HallRow>
         {
             new(1, 1),
             new(2, 2),
@@ -110,7 +110,7 @@ public class TestDataProvider
 
     public CinemaHall GetCinemaHallWithWrongSeatCountInRows()
     {
-        return CinemaHall.Create(new List<Row>
+        return CinemaHall.Create(new List<HallRow>
         {
             new(1, 1),
             new(2, 2),

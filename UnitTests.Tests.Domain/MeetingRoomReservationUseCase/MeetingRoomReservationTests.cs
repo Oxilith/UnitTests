@@ -127,7 +127,7 @@ public class MeetingRoomReservationTests
         var result = _reservationService.AddReservation(room, reservation);
 
         // Assert
-        Assert.That(result, Is.False, "Reservation should fail when it is shorter than the room allows.");
+        Assert.That(result, Is.False, "HallReservation should fail when it is shorter than the room allows.");
     }
 
     [Test]
@@ -145,7 +145,7 @@ public class MeetingRoomReservationTests
         var result = _reservationService.AddReservation(room, reservation);
 
         // Assert
-        Assert.That(result, Is.False, "Reservation should fail when it is longer than the room allows.");
+        Assert.That(result, Is.False, "HallReservation should fail when it is longer than the room allows.");
     }
 
     [Test]
@@ -160,6 +160,6 @@ public class MeetingRoomReservationTests
 
         // Assert
         Assert.Throws<InvalidOperationException>(act.Invoke,
-            "Reservation instantiation should throw creation timestamp is before or equals to start time.");
+            "HallReservation instantiation should throw creation timestamp is before or equals to start time.");
     }
 }
