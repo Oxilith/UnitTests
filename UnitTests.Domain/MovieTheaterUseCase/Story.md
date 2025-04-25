@@ -15,6 +15,11 @@ Para (rzęd, numer), niezmienna, definiuje położenie pojedynczego miejsca.
 - Między rezerwacjami musi być co najmniej 1 wolne miejsce (dla dystansu społecznego).
 - Wszystkie miejsca w ramach jednej rezerwacji muszą być w tym samym rzędzie i ułożone kolejno.
 - Rezerwacja nie może być mniejsza niż 1 miejsce i większa niż 5 miejsc.
+- Użytkownik przekazuje liste ~~~~rzędów do konstruktora MovieTheater.
+- Użytkownik przekazuje numer i liczbe miejsc do konstruktora Row.
+- Rzędy są numerowane od 1 do n.
+- Rząd 1 jest najkrótszy, rząd n jest najdłuższy.
+- Rzędy są immutable.
 - Rezerwacja nie może być w przeszłości.
 - Rezerwacja nie może być dalej niż 30 dni od dnia dzisiejszego.
 - Nie można rezerwować miejsc, które są już zarezerwowane.

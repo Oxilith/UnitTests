@@ -7,8 +7,9 @@ public class Reservation
     public Guid Id { get; }
     public IEnumerable<SeatPosition> Seats { get; }
     
-    public Reservation(Guid id, IEnumerable<SeatPosition> seats)
+    public Reservation(IEnumerable<SeatPosition> seats)
     {
+        Id = Guid.NewGuid();
         // TODO: 
     }
 }
