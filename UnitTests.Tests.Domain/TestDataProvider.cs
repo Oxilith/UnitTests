@@ -5,6 +5,11 @@ namespace UnitTests.Tests.Domain;
 
 public class TestDataProvider
 {
+    public Reservation GetReservationWithNullSeatPositions() => 
+        new Reservation(null);
+
+    public Reservation? GetNullReservation() => null;
+    
     public Reservation GetEmptyReservation() => 
         new Reservation(new List<SeatPosition>());
     public Reservation GetCorrectReservation()
