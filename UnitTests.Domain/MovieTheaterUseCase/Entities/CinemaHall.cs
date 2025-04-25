@@ -1,4 +1,5 @@
-﻿using UnitTests.Domain.MovieTheaterUseCase.Exceptions;
+﻿using UnitTests.Domain.Extensions;
+using UnitTests.Domain.MovieTheaterUseCase.Exceptions;
 
 namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
@@ -64,12 +65,7 @@ public class CinemaHall
 
     private static void ValidateDuplicateRows(IEnumerable<HallRow> rows)
     {
-        var duplicates = rows
-            .GroupBy(r => r.Number)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key);
-
-        if (duplicates.Any())
+        if (rows.CheckForaDuplicates(x=>x.Number))
             throw new BusinessRuleViolationException(
                 "Cannot add two or more rows with the same number to the cinema hall.");
     }
