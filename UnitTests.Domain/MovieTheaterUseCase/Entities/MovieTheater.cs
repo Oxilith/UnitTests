@@ -18,9 +18,26 @@ public class MovieTheater
         Id = Guid.NewGuid();
     }
 
-    public void Reserve(Guid reservationId, IEnumerable<SeatPosition> seats)
+    public void Reserve(Reservation reservation)
     {
-        // TODO: 
+        if (_reservations.Any(x => x.Id == reservation.Id))
+            throw new BusinessRuleViolationException("Reservation was already added.");
+        
+        var seatDict = reservation.Seats
+            .GroupBy(x => x.Row)
+            .ToDictionary(g => g.Key,
+                g => g.Select(s => s.Number).ToList());
+
+        foreach (var rowSeats in seatDict)
+        {
+            if (_rows.All(x => x.Number != rowSeats.Key))
+                throw new BusinessRuleViolationException($"Row {rowSeats.Key} does not exist in the theater.");
+
+            if (_rows.First(x => x.Number == rowSeats.Key).Seats <= rowSeats.Value.Count)
+                throw new BusinessRuleViolationException($"Not enough seats available in the row {rowSeats.Key}.");
+        }
+        
+        _reservations.Add(reservation);
     }
 
     public IReadOnlyCollection<Reservation> Reservations => _reservations;

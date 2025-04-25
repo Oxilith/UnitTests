@@ -6,6 +6,11 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Services;
 public class SeatReservationService
 {
     private readonly IMovieTheaterRepository _repo;
+
+    public SeatReservationService(IMovieTheaterRepository repo)
+    {
+        _repo = repo;
+    }
     
     public async Task Reserve(Guid theaterId, Reservation reservation)
     {
@@ -17,7 +22,7 @@ public class SeatReservationService
         }
 
         Console.WriteLine("Trying to reserve seats");
-        theater.Reserve(reservation.Id, reservation.Seats);
+        theater.Reserve(reservation);
         
         if (theater.Reservations.All(x => x.Id != reservation.Id))
         {
