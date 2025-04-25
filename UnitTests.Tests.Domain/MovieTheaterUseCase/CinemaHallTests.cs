@@ -13,6 +13,20 @@ public class CinemaHallTests
         _dataProvider = new TestDataProvider();
     }
 
+
+    [Test]
+    public void CinemaHallFirstRowShouldHaveNumberOne()
+    {
+        Assert.That(true, Is.False);
+    }
+
+    [Test]
+    public void CinemaHallRowsShouldHaveConsecutiveNumbers()
+    {
+        Assert.That(true, Is.False);
+    }
+
+
     [Test]
     public void CannotCreateCinemHallWhenRowCountIsIncorrect()
     {

@@ -22,6 +22,18 @@ public class SeatReservationServiceTests
     }
 
     [Test]
+    public void ReservationCannotBeInPast()
+    {
+        Assert.That(true, Is.False);
+    }
+
+    [Test]
+    public void ReservationCannotBeMoreThan30DaysInFuture()
+    {
+        Assert.That(true, Is.False);
+    }
+
+    [Test]
     public void CannotAddTwoRowsWithSameNumber()
     {
         // Arrange & Act
