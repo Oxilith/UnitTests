@@ -5,8 +5,8 @@ namespace UnitTests.Domain.MeetingRoomReservationUseCase.Services;
 
 public class ReservationService : IReservationService
 {
-    public bool AddReservation(MeetingRoom room, Reservation reservation)
+    public bool AddReservation(MeetingRoom room, MeetingRoomReservation meetingRoomReservation)
     {
-        return room.AddReservation(reservation);
+        return room.AddReservation(meetingRoomReservation);
     }
 }

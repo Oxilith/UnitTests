@@ -20,7 +20,7 @@ public class MeetingRoomReservationTests
     {
         // Arrange
         var room = new MeetingRoom("Gdynia");
-        var reservation = new Reservation(
+        var reservation = new MeetingRoomReservation(
             new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3)));
 
         // Act
@@ -35,7 +35,7 @@ public class MeetingRoomReservationTests
     {
         // Arrange
         var room = new MeetingRoom("Gdynia");
-        var reservation = new Reservation(
+        var reservation = new MeetingRoomReservation(
             new TimeRange(DateTime.UtcNow.AddHours(-3), DateTime.UtcNow.AddHours(-2)));
 
         // Act
@@ -50,10 +50,10 @@ public class MeetingRoomReservationTests
     {
         // Arrange
         var room = new MeetingRoom("Gdynia");
-        var reservation = new Reservation(
+        var reservation = new MeetingRoomReservation(
             new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3)));
 
-        var conflictingReservation = new Reservation(
+        var conflictingReservation = new MeetingRoomReservation(
             new TimeRange(DateTime.UtcNow.AddHours(2.5), DateTime.UtcNow.AddHours(3.5)));
 
         // Act && Assert
@@ -73,8 +73,8 @@ public class MeetingRoomReservationTests
         var firstReservationTime = new TimeRange(DateTime.UtcNow.AddHours(2), DateTime.UtcNow.AddHours(3));
         var secondReservationTime = new TimeRange(firstReservationTime.End, firstReservationTime.End.AddHours(1));
 
-        var firstReservation = new Reservation(firstReservationTime);
-        var secondReservation = new Reservation(secondReservationTime);
+        var firstReservation = new MeetingRoomReservation(firstReservationTime);
+        var secondReservation = new MeetingRoomReservation(secondReservationTime);
 
         // Act && Assert
         var result = _reservationService.AddReservation(room, firstReservation);
@@ -97,9 +97,9 @@ public class MeetingRoomReservationTests
         var rightAfterReservationTime = new TimeRange(firstEndTime.AddMilliseconds(1), firstEndTime.AddHours(1));
         var rightBeforeReservationTime = new TimeRange(firstStartTime.AddHours(-1), firstStartTime.AddMilliseconds(-1));
 
-        var firstReservation = new Reservation(firstReservationTime);
-        var rightAfterReservation = new Reservation(rightAfterReservationTime);
-        var rightBeforeReservation = new Reservation(rightBeforeReservationTime);
+        var firstReservation = new MeetingRoomReservation(firstReservationTime);
+        var rightAfterReservation = new MeetingRoomReservation(rightAfterReservationTime);
+        var rightBeforeReservation = new MeetingRoomReservation(rightBeforeReservationTime);
 
         // Act && Assert
         var result = _reservationService.AddReservation(room, firstReservation);
@@ -120,7 +120,7 @@ public class MeetingRoomReservationTests
 
         var firstStartTime = DateTime.UtcNow.AddHours(4);
         var firstEndTime = firstStartTime.AddMinutes(30).AddMilliseconds(-1);
-        var reservation = new Reservation(
+        var reservation = new MeetingRoomReservation(
             new TimeRange(firstStartTime, firstEndTime));
 
         // Act
@@ -138,7 +138,7 @@ public class MeetingRoomReservationTests
 
         var firstStartTime = DateTime.UtcNow.AddHours(4);
         var firstEndTime = firstStartTime.AddMinutes(90).AddMilliseconds(1);
-        var reservation = new Reservation(
+        var reservation = new MeetingRoomReservation(
             new TimeRange(firstStartTime, firstEndTime));
 
         // Act
@@ -156,7 +156,7 @@ public class MeetingRoomReservationTests
         var endTime = requestedStartTime.AddHours(1);
 
         // Act
-        Action act = () => new Reservation(new TimeRange(requestedStartTime, endTime), requestedStartTime);
+        Action act = () => new MeetingRoomReservation(new TimeRange(requestedStartTime, endTime), requestedStartTime);
 
         // Assert
         Assert.Throws<InvalidOperationException>(act.Invoke,

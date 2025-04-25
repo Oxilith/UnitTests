@@ -1,10 +1,11 @@
 ﻿using UnitTests.Domain.MeetingRoomReservationUseCase.ValueObjects;
+using UnitTests.Domain.MovieTheaterUseCase.ValueObjects;
 
 namespace UnitTests.Domain.MeetingRoomReservationUseCase.Entities;
 
-public class Reservation
+public class MeetingRoomReservation
 {
-    public Reservation(TimeRange time, DateTime? creationTimestamp = null)
+    public MeetingRoomReservation(TimeRange time, DateTime? creationTimestamp = null)
     {
         CreationTimestamp = creationTimestamp ?? DateTime.UtcNow;
         if (time.Start <= creationTimestamp)
@@ -21,8 +22,8 @@ public class Reservation
 
     public TimeSpan Duration => Time.End - Time.Start;
 
-    public bool Overlaps(Reservation reservation)
+    public bool Overlaps(MeetingRoomReservation meetingRoomReservation)
     {
-        return reservation.Id == Id || Time.Overlaps(reservation.Time);
+        return meetingRoomReservation.Id == Id || Time.Overlaps(meetingRoomReservation.Time);
     }
 }
