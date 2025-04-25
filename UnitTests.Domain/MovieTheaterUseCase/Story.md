@@ -5,7 +5,7 @@ W tej domenie zarządzamy rezerwacjami miejsc na seanse filmowe. Kluczowe pojęc
 Reprezentuje pojedynczą salę kinową z unikalnym identyfikatorem, utrzymuje listę wszystkich dokonanych rezerwacji.
 
 ### Reservation (Entity)
-Rezerwacja z unikalnym identyfikatorem, przypisana do konkretnego seansu i zestawu miejsc.
+Rezerwacja z unikalnym identyfikatorem, przypisana do ~~konkretnego seansu i~~ zestawu miejsc.
 
 ### SeatPosition (Value Object)
 Para (rzęd, numer), niezmienna, definiuje położenie pojedynczego miejsca.
