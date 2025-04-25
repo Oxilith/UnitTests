@@ -21,6 +21,9 @@ Para (rzęd, numer), niezmienna, definiuje położenie pojedynczego miejsca.
 - Nie można utworzyć rezerwacji, jeśli nie ma wystarczającej liczby miejsc w rzędzie.
 - Każda rezerwacja powinna być unikalna
   - Id rezerwacji jest generowane automatycznie.
+  - Czas trwania rezerwacji jest przypisany do rezerwacji
+  - Czas utworzenia rezerwacji jest generowane automatycznie.
+  - Czas trwania rezerwacji jest przekazywany przez użytkownika.
   - Nie można mieć dwóch rezerwacji z tym samym id.
   - Jeśli rezerwacja została utworzona nie można jej zminiać.
   
