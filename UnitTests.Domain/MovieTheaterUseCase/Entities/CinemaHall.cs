@@ -4,6 +4,8 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
 public class CinemaHall
 {
+    private const int MinRowCount = 1;
+    private const int MaxRowCount = 9;
     private readonly List<HallReservation> _reservations = new();
     private readonly List<HallRow> _rows;
 
@@ -23,27 +25,41 @@ public class CinemaHall
         return new CinemaHall(rows);
     }
 
-    private static void ValidateRows(List<HallRow> rows)
+    private static void ValidateRows(IReadOnlyList<HallRow> rows)
     {
-        if (rows is not { Count: > 0 })
-            throw new BusinessRuleViolationException("Cinema hall should have at least one row.");
+        ValidateRowCount(rows.Count);
+        ValidateDuplicateRows(rows);
+        ValidateSeatCountIncreasing(rows);
+    }
 
-        if (rows.Count > 9)
-            throw new BusinessRuleViolationException("Cinema hall should have at most 9 rows.");
+    private static void ValidateRowCount(int count)
+    {
+        if (count < MinRowCount)
+            throw new BusinessRuleViolationException(
+                $"Cinema hall should have at least {MinRowCount} row.");
+        if (count > MaxRowCount)
+            throw new BusinessRuleViolationException(
+                $"Cinema hall should have at most {MaxRowCount} rows.");
+    }
 
-        if (rows.GroupBy(x => x.Number)
-            .Any(g => g.Count() > 1))
+    private static void ValidateDuplicateRows(IEnumerable<HallRow> rows)
+    {
+        var duplicates = rows
+            .GroupBy(r => r.Number)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key);
+
+        if (duplicates.Any())
             throw new BusinessRuleViolationException(
                 "Cannot add two or more rows with the same number to the cinema hall.");
+    }
 
-        var lastCount = 0;
-        foreach (var row in rows)
-        {
-            if (row.Seats <= lastCount)
-                throw new BusinessRuleViolationException("Rows seat count should increase with each row.");
-
-            lastCount = row.Seats;
-        }
+    private static void ValidateSeatCountIncreasing(IReadOnlyList<HallRow> rows)
+    {
+        for (var i = 1; i < rows.Count; i++)
+            if (rows[i].Seats <= rows[i - 1].Seats)
+                throw new BusinessRuleViolationException(
+                    "Rows seat count should increase with each row.");
     }
 
     public void Reserve(HallReservation hallReservation)

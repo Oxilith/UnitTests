@@ -5,11 +5,13 @@ namespace UnitTests.Domain.MovieTheaterUseCase.Entities;
 
 public class HallReservation
 {
+    private const int MaxSeatCount = 5;
+    private const int MinSeatCount = 1;
+
     public HallReservation(List<SeatPosition> seats)
     {
-        if (seats == null || seats.Count == 0)
-            throw new BusinessRuleViolationException(
-                "HallReservation must have at least one seat.");
+        ArgumentNullException.ThrowIfNull(seats, nameof(seats));
+        EnsureHasAtLeastOneSeat(seats);
 
         var seatsByRows = GroupSeatsByRows(seats);
         ValidateSeatPositions(seatsByRows);
@@ -21,9 +23,16 @@ public class HallReservation
     public Guid Id { get; }
     public Dictionary<Guid, List<int>> SeatsByRows { get; }
 
+    private static void EnsureHasAtLeastOneSeat(List<SeatPosition> seats)
+    {
+        if (seats.Count == 0)
+            throw new BusinessRuleViolationException(
+                "HallReservation must have at least one seat.");
+    }
+
     private static void ValidateSeatPositions(Dictionary<Guid, List<int>> seatDict)
     {
-        if (seatDict.Any(rowSeats => rowSeats.Value.Count is < 1 or > 5))
+        if (seatDict.Any(rowSeats => rowSeats.Value.Count is < MinSeatCount or > MaxSeatCount))
             throw new BusinessRuleViolationException(
                 "HallReservation must be between 1 and 5 seats.");
     }

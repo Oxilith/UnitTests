@@ -22,7 +22,7 @@ public class CinemaHallTests
 
         // Assert
         act.Should().Throw<BusinessRuleViolationException>()
-            .WithMessage("Cinema hall should have at least one row.");
+            .WithMessage("Cinema hall should have at least 1 row.");
         act2.Should().Throw<BusinessRuleViolationException>()
             .WithMessage("Cinema hall should have at most 9 rows.");
     }
