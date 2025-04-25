@@ -6,6 +6,7 @@ namespace UnitTests.Tests.Domain;
 public class TestDataProvider
 {
     #region Reservation
+
     public Reservation GetReservationWithNullSeatPositions()
     {
         return new Reservation(null);
@@ -21,98 +22,106 @@ public class TestDataProvider
         return new Reservation(new List<SeatPosition>());
     }
 
-    public Reservation GetCorrectReservation()
+    public Reservation GetCorrectReservation(List<Row>? rows = null)
     {
-        return new Reservation(new List<SeatPosition>
+        rows ??= new List<Row>
         {
-            new(1, 1),
             new(1, 2),
-            new(2, 1),
-            new(2, 2),
             new(2, 3),
-            new(3, 1),
-            new(3, 2),
-            new(3, 3),
             new(3, 4),
-            new(9, 1),
-            new(9, 2),
-            new(9, 3),
-            new(9, 4),
             new(9, 5)
-        });
-    }
+        };
 
-    public Reservation GetIncorrectReservation()
-    {
         return new Reservation(new List<SeatPosition>
         {
-            new(2, 1),
-            new(2, 2),
-            new(2, 3),
-            new(1, 1),
-            new(1, 2),
-            new(1, 3),
-            new(1, 4),
-            new(1, 5),
-            new(1, 6)
+            new(rows.First(x => x.Number == 1).Id, 1),
+            new(rows.First(x => x.Number == 1).Id, 2),
+            new(rows.First(x => x.Number == 2).Id, 1),
+            new(rows.First(x => x.Number == 2).Id, 2),
+            new(rows.First(x => x.Number == 2).Id, 3),
+            new(rows.First(x => x.Number == 3).Id, 1),
+            new(rows.First(x => x.Number == 3).Id, 2),
+            new(rows.First(x => x.Number == 3).Id, 3),
+            new(rows.First(x => x.Number == 3).Id, 4),
+            new(rows.First(x => x.Number == 9).Id, 1),
+            new(rows.First(x => x.Number == 9).Id, 2),
+            new(rows.First(x => x.Number == 9).Id, 3),
+            new(rows.First(x => x.Number == 9).Id, 4),
+            new(rows.First(x => x.Number == 9).Id, 5)
         });
     }
 
     public Reservation GetLengthyReservation()
     {
+        var rows = new List<Row>
+        {
+            new(1, 6),
+            new(2, 3)
+        };
         return new Reservation(new List<SeatPosition>
         {
-            new(2, 1),
-            new(2, 2),
-            new(2, 3),
-            new(1, 1),
-            new(1, 2),
-            new(1, 3),
-            new(1, 4),
-            new(1, 5),
-            new(1, 6)
+            new(rows.First(x => x.Number == 2).Id, 1),
+            new(rows.First(x => x.Number == 2).Id, 2),
+            new(rows.First(x => x.Number == 2).Id, 3),
+            new(rows.First(x => x.Number == 1).Id, 1),
+            new(rows.First(x => x.Number == 1).Id, 2),
+            new(rows.First(x => x.Number == 1).Id, 3),
+            new(rows.First(x => x.Number == 1).Id, 4),
+            new(rows.First(x => x.Number == 1).Id, 5),
+            new(rows.First(x => x.Number == 1).Id, 6)
         });
     }
-    
-    #endregion
-    
-    #region MovieTheater
-    public MovieTheater GetCorrectMovieTheater() => new MovieTheater(new List<Row>
-    {
-        new(1, 3),
-        new(2, 4),
-        new(3, 5)
-    });       
-    
-    public MovieTheater GetEmptyMovieTheater() => new MovieTheater(new List<Row>
-    { });   
-    
-    public MovieTheater GetLengthyMovieTheater() => new MovieTheater(new List<Row>
-    {
-        new(1, 1),
-        new(2, 2),
-        new(3, 3),
-        new(4, 4),
-        new(5, 5),
-        new(6, 6),
-        new(7, 7),
-        new(8, 8),
-        new(9, 9),
-        new(10, 9),
-    });
-    
-    public MovieTheater GetMovieTheaterWithWrongSeatCountInRows() => new MovieTheater(new List<Row>
-    {
-        new(1, 1),
-        new(2, 2),
-        new(3, 3),
-        new(4, 2),
-        new(5, 5),
-        new(6, 6),
-        new(7, 7),
-        new(8, 8),
-    });
 
-    
+    #endregion
+
+    #region CinemaHall
+
+    public CinemaHall GetCorrectCinemaHall()
+    {
+        return CinemaHall.Create(new List<Row>
+        {
+            new(1, 3),
+            new(2, 4),
+            new(3, 5)
+        });
+    }
+
+    public CinemaHall GetEmptyCinemaHall()
+    {
+        return CinemaHall.Create(new List<Row>());
+    }
+
+    public CinemaHall GetLengthyCinemaHall()
+    {
+        return CinemaHall.Create(new List<Row>
+        {
+            new(1, 1),
+            new(2, 2),
+            new(3, 3),
+            new(4, 4),
+            new(5, 5),
+            new(6, 6),
+            new(7, 7),
+            new(8, 8),
+            new(9, 9),
+            new(10, 9)
+        });
+    }
+
+    public CinemaHall GetCinemaHallWithWrongSeatCountInRows()
+    {
+        return CinemaHall.Create(new List<Row>
+        {
+            new(1, 1),
+            new(2, 2),
+            new(3, 3),
+            new(4, 2),
+            new(5, 5),
+            new(6, 6),
+            new(7, 7),
+            new(8, 8)
+        });
+    }
+
     #endregion
 }

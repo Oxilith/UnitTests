@@ -2,8 +2,8 @@
 
 namespace UnitTests.Domain.MovieTheaterUseCase.Repositories;
 
-public interface IMovieTheaterRepository
+public interface ICinemaHallRepository
 {
-    Task<MovieTheater?> Get(Guid id);
-    Task Save(MovieTheater theater);
+    Task<CinemaHall?> GetCinemaHall(Guid id);
+    Task Save(CinemaHall theater);
 }

@@ -11,26 +11,28 @@ public class Reservation
             throw new BusinessRuleViolationException(
                 "Reservation must have at least one seat.");
 
+        var seatsByRows = GroupSeatsByRows(seats);
+        ValidateSeatPositions(seatsByRows);
 
-        var seatDict = seats
-            .GroupBy(x => x.Row)
-            .ToDictionary(g => g.Key,
-                g => g.Select(s => s.Number).ToList());
-
-        foreach (var rowSeats in seatDict)
-        {
-            var isInvalidSeatCount = rowSeats.Value.Count is < 1 or > 5;
-            if (isInvalidSeatCount)
-                throw new BusinessRuleViolationException(
-                    "Reservation must be between 1 and 5 seats.");
-        }
-
-        Seats = seats;
-
-
+        SeatsByRows = seatsByRows;
         Id = Guid.NewGuid();
     }
 
     public Guid Id { get; }
-    public IEnumerable<SeatPosition> Seats { get; }
+    public Dictionary<Guid, List<int>> SeatsByRows { get; }
+
+    private static void ValidateSeatPositions(Dictionary<Guid, List<int>> seatDict)
+    {
+        if (seatDict.Any(rowSeats => rowSeats.Value.Count is < 1 or > 5))
+            throw new BusinessRuleViolationException(
+                "Reservation must be between 1 and 5 seats.");
+    }
+
+    private static Dictionary<Guid, List<int>> GroupSeatsByRows(List<SeatPosition> seats)
+    {
+        return seats
+            .GroupBy(x => x.RowId)
+            .ToDictionary(g => g.Key,
+                g => g.Select(s => s.SeatNumber).ToList());
+    }
 }

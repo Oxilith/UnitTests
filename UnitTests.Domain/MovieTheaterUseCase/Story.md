@@ -18,14 +18,16 @@ Para (rzęd, numer), niezmienna, definiuje położenie pojedynczego miejsca.
 
 - Między rezerwacjami musi być co najmniej 1 wolne miejsce (dla dystansu społecznego).
   ~~- Rezerwacja nie może być mniejsza niż 1 miejsce i większa niż 5 miejsc w rzędzie.~~
-~~- Rzędy są numerowane od 1 do n (n<10)~~.
-~~- Rząd 1 jest najkrótszy, rząd n jest najdłuższy.~~
-~~- Każdy kolejny rząd musi być dłuższy od poprzedniego.~~
-- Nie można dodać dwóch lub więcej rzędów o tym samym numerze do sali kinowej.
+  ~~- Rzędy są numerowane od 1 do n (n<10)~~.
+  ~~- Rząd 1 jest najkrótszy, rząd n jest najdłuższy.~~
+  ~~- Każdy kolejny rząd musi być dłuższy od poprzedniego.~~
+- Pierwszy rzad musi mieć numer 1.
+- Każdy kolejny rząd musi miec numer o 1 większy od poprzedniego.
+  ~~- Nie można dodać dwóch lub więcej rzędów o tym samym numerze do sali kinowej.~~
 - Rzędy są immutable.
 - Rezerwacja nie może być w przeszłości.
 - Rezerwacja nie może być dalej niż 30 dni od dnia dzisiejszego.
-- Nie można rezerwować miejsc, które są już zarezerwowane.
+- Nie można rezerwować miejsc, które są już zarezerwowane. ??
   ~~- Nie można utworzyć rezerwacji, jeśli nie ma wystarczającej liczby miejsc w rzędzie.~~
 - Każda rezerwacja powinna być unikalna
     - Id rezerwacji jest generowane automatycznie.

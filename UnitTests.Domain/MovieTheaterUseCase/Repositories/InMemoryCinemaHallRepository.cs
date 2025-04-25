@@ -2,16 +2,16 @@
 
 namespace UnitTests.Domain.MovieTheaterUseCase.Repositories;
 
-public class InMemoryMovieTheaterRepository : IMovieTheaterRepository
+public class InMemoryCinemaHallRepository : ICinemaHallRepository
 {
-    private readonly Dictionary<Guid, MovieTheater> _store = new();
+    private readonly Dictionary<Guid, CinemaHall> _store = new();
 
-    public Task<MovieTheater> Get(Guid id)
+    public Task<CinemaHall> GetCinemaHall(Guid id)
     {
         return Task.FromResult(_store[id]);
     }
 
-    public Task Save(MovieTheater theater)
+    public Task Save(CinemaHall theater)
     {
         _store[theater.Id] = theater;
         return Task.CompletedTask;
