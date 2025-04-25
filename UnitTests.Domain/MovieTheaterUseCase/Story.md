@@ -1,10 +1,8 @@
 ﻿# System rezerwacji miejsc w kinie
-
-## Opis domeny: System rezerwacji miejsc w kinie
 W tej domenie zarządzamy rezerwacjami miejsc na seanse filmowe. Kluczowe pojęcia to:
 
-### MovieTheater (Aggregate Root)
-Reprezentuje pojedynczą salę kinową, utrzymuje listę wszystkich dokonanych rezerwacji.
+### MovieTheater (Entity)
+Reprezentuje pojedynczą salę kinową z unikalnym identyfikatorem, utrzymuje listę wszystkich dokonanych rezerwacji.
 
 ### Reservation (Entity)
 Rezerwacja z unikalnym identyfikatorem, przypisana do konkretnego seansu i zestawu miejsc.
@@ -14,7 +12,6 @@ Para (rzęd, numer), niezmienna, definiuje położenie pojedynczego miejsca.
 
 ## Business Rules (reguły biznesowe):
 
-- Nie wolno rezerwować już zajętych miejsc.
 - Między rezerwacjami musi być co najmniej 1 wolne miejsce (dla dystansu społecznego).
 - Wszystkie miejsca w ramach jednej rezerwacji muszą być w tym samym rzędzie i ułożone kolejno.
 - Rezerwacja nie może być mniejsza niż 1 miejsce i większa niż 5 miejsc.
